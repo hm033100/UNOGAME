@@ -60,11 +60,11 @@ public class PlayerHand {
      * @return Boolean
      */
     public boolean hasMatch(Card c) {
-        for (int i = 0; i < handArr.size(); i++) {
-            if (c.isMatch(handArr.get(i))) {
+        for (Card card : handArr) {
+            if (c.isMatch(card)) {
                 return true;
-            } else if (handArr.get(i).getValue().equals("WC")
-                    || handArr.get(i).getValue().equals("+4")) {
+            } else if (card.getValue().equals("WC")
+                    || card.getValue().equals("+4")) {
                 return true;
             }
         }
@@ -111,11 +111,7 @@ public class PlayerHand {
      * @return Boolean
      */
     public boolean isWinner() {
-        boolean isWinner = false;
-        if (handArr.isEmpty()) {
-            isWinner = true;
-        }
-        return isWinner;
+        return handArr.isEmpty();
     }
 
     /**
@@ -124,11 +120,7 @@ public class PlayerHand {
      * @return Boolean
      */
     public boolean isUno() {
-        boolean isUno = false;
-        if (handArr.size() == 1) {
-            isUno = true;
-        }
-        return isUno;
+        return handArr.size() == 1;
     }
 
     /**
@@ -138,9 +130,9 @@ public class PlayerHand {
      */
     @Override
     public String toString() {
-        String hand = "";
-        for (int i = 0; i < handArr.size(); i++) {
-            hand += handArr.get(i) + " ";
+        StringBuilder hand = new StringBuilder();
+        for (Card card : handArr) {
+            hand.append(card).append(" ");
         }
         return name + " = { " + hand + "}";
     }

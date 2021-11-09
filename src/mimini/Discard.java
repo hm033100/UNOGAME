@@ -33,17 +33,6 @@ public class Discard {
     }
 
     /**
-     * This method returns the size of the discard pile.
-     *
-     * (For testing purposes mainly)
-     *
-     * @return Integer
-     */
-    public int getCount() {
-        return cardArr.size();
-    }
-
-    /**
      * This method moves all the cards from the discard pile to the deck.
      *
      * @param d Deck
@@ -61,9 +50,8 @@ public class Discard {
      * @return Card
      */
     public Card topCard() {
-        Card c = new Card(cardArr.get(cardArr.size() - 1).getColor(),
+        return new Card(cardArr.get(cardArr.size() - 1).getColor(),
                 cardArr.get(cardArr.size() - 1).getValue());
-        return c;
     }
 
     /**
@@ -75,17 +63,17 @@ public class Discard {
      */
     @Override
     public String toString() {
-        String result = "Discard Pile: ";
+        StringBuilder result = new StringBuilder("Discard Pile: ");
         int count = 0;
 
         for (Card card : cardArr) {
-            result += card + " ";
+            result.append(card).append(" ");
             count++;
             if (count % 15 == 0) {
-                result += "\n";
+                result.append("\n");
             }
         }
-        return result;
+        return result.toString();
     }
 
 }

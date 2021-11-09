@@ -9,7 +9,7 @@ package mimini;
  * @Statment: This is my own work.
  * @SIDENOTE: Worked with Isaiah DeBenedetto
  */
-public class Card {
+public record Card(String color, String value) {
 
     public static final String BLACK_BOLD_BRIGHT = "\033[37m";
     public static final String ANSI_RED = "\033[31m";
@@ -17,8 +17,6 @@ public class Card {
     public static final String ANSI_YELLOW = "\033[33m";
     public static final String ANSI_BLUE = "\033[34m";
     public static final String ANSI_RESET = "\033[0m";
-    private String color;
-    private final String value;
 
     /**
      * Constructor that takes String arguments
@@ -26,9 +24,7 @@ public class Card {
      * @param color String
      * @param value String
      */
-    public Card(String color, String value) {
-        this.color = color;
-        this.value = value;
+    public Card {
     }
 
     /**
@@ -39,25 +35,20 @@ public class Card {
     public String getColor() {
         return color;
     }
-    
+
     /**
      * This method will be used to display what color was chosen to the user.
-     * 
+     *
      * @return String
      */
-    public String chooseColor(){
-        switch (color) {
-                    case "R":
-                        return ANSI_RED + "RED" + ANSI_RESET;
-                    case "G":
-                        return ANSI_GREEN + "GREEN" + ANSI_RESET;
-                    case "Y":
-                        return ANSI_YELLOW + "YELLOW" + ANSI_RESET;
-                    case "B":
-                        return ANSI_BLUE + "BLUE" + ANSI_RESET;
-                    default:
-                        return value + "";
-                }
+    public String chooseColor() {
+        return switch (color) {
+            case "R" -> ANSI_RED + "RED" + ANSI_RESET;
+            case "G" -> ANSI_GREEN + "GREEN" + ANSI_RESET;
+            case "Y" -> ANSI_YELLOW + "YELLOW" + ANSI_RESET;
+            case "B" -> ANSI_BLUE + "BLUE" + ANSI_RESET;
+            default -> value + "";
+        };
     }
 
     /**
@@ -67,15 +58,6 @@ public class Card {
      */
     public String getValue() {
         return value;
-    }
-
-    /**
-     * This method sets the color of the card.
-     *
-     * @param color String
-     */
-    public void setColor(String color) {
-        this.color = color;
     }
 
     /**
@@ -95,24 +77,15 @@ public class Card {
      */
     @Override
     public String toString() {
-        switch (value) {
-            case "WC":
-                return BLACK_BOLD_BRIGHT + value + ANSI_RESET;
-            case "+4":
-                return BLACK_BOLD_BRIGHT + value + ANSI_RESET;
-            default:
-                switch (color) {
-                    case "R":
-                        return ANSI_RED + value + ANSI_RESET;
-                    case "G":
-                        return ANSI_GREEN + value + ANSI_RESET;
-                    case "Y":
-                        return ANSI_YELLOW + value + ANSI_RESET;
-                    case "B":
-                        return ANSI_BLUE + value + ANSI_RESET;
-                    default:
-                        return value + "";
-                }
-        }
+        return switch (value) {
+            case "WC", "+4" -> BLACK_BOLD_BRIGHT + value + ANSI_RESET;
+            default -> switch (color) {
+                case "R" -> ANSI_RED + value + ANSI_RESET;
+                case "G" -> ANSI_GREEN + value + ANSI_RESET;
+                case "Y" -> ANSI_YELLOW + value + ANSI_RESET;
+                case "B" -> ANSI_BLUE + value + ANSI_RESET;
+                default -> value + "";
+            };
+        };
     }
 }

@@ -104,36 +104,23 @@ public class Deck {
     }
 
     /**
-     * This method will check if deck is empty.
-     *
-     * @return boolean
-     */
-    public boolean isEmpty() {
-        boolean isEmpty = false;
-        if (cardArr.isEmpty()) {
-            isEmpty = true;
-        }
-        return isEmpty;
-    }
-
-    /**
      * Returns string description of the deck.
      *
      * @return String
      */
     @Override
     public String toString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         int count = 0;
 
         for (Card card : cardArr) {
-            result += card + " ";
+            result.append(card).append(" ");
             count++;
             if (count % 15 == 0) {
-                result += "\n";
+                result.append("\n");
             }
         }
-        return result;
+        return result.toString();
     }
 
     /**

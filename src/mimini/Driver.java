@@ -1,6 +1,7 @@
 package mimini;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * @coauthor: Hermes Mimini
@@ -18,11 +19,13 @@ public class Driver {
     static int direction = 1;
     static int totalNumberPlayers = 5;
     static boolean effectApplied = true;
-    static String winnerDisplay = "\\\\        //\\\\        //  ||  ||\\\\     || ||\\\\     || ||===  ||==||\n"
-            + " \\\\      //  \\\\      //   ||  ||  \\\\   || ||  \\\\   || ||     ||  ||\n"
-            + "  \\\\    //    \\\\    //    ||  ||   \\\\  || ||   \\\\  || ||==   ||=||\n"
-            + "   \\\\  //      \\\\  //     ||  ||    \\\\ || ||    \\\\ || ||     ||  \\\\\n"
-            + "    \\\\//        \\\\//      ||  ||     \\\\|| ||     \\\\|| ||===  ||   \\\\\n";
+    static String winnerDisplay = """
+            \\\\        //\\\\        //  ||  ||\\\\     || ||\\\\     || ||===  ||==||
+             \\\\      //  \\\\      //   ||  ||  \\\\   || ||  \\\\   || ||     ||  ||
+              \\\\    //    \\\\    //    ||  ||   \\\\  || ||   \\\\  || ||==   ||=||
+               \\\\  //      \\\\  //     ||  ||    \\\\ || ||    \\\\ || ||     ||  \\\\
+                \\\\//        \\\\//      ||  ||     \\\\|| ||     \\\\|| ||===  ||   \\\\
+            """;
 
     /**
      * @param args the command line arguments
@@ -64,33 +67,34 @@ public class Driver {
                 + player4);
         System.out.println("----------------------------------------------\n");
 
-        //checking if the players are winners (have no cards) 
-        //checking if the deck is empty (if so repopulating it with the cards
-        //from the dicard pile)
-        while (player1.isWinner() == false && player2.isWinner() == false
-                && player3.isWinner() == false && player4.isWinner() == false) {
+        /*
+        checking if the players are winners (have no cards)
+        checking if the deck is empty (if so repopulating it with the cards
+        from the discard pile)
+        */
+        while (!player1.isWinner() && !player2.isWinner() && !player3.isWinner() && !player4.isWinner()) {
 
             //display players with uno
-            for (int i = 0; i < players.size(); i++) {
-                if (players.get(i).isUno()) {
-                    System.out.println(players.get(i).getName() + " is UNO!!!");
+            for (PlayerHand player : players) {
+                if (player.isUno()) {
+                    System.out.println(player.getName() + " is UNO!!!");
                     System.out.println("----------------------------------------------\n");
                 }
             }
 
             playerTurn(players.get(nextPlayer));
-            int nextNextPlayer = nextPlayer + 1 * direction + totalNumberPlayers;
+            int nextNextPlayer = nextPlayer + direction + totalNumberPlayers;
             nextNextPlayer %= totalNumberPlayers;
             nextPlayer(players.get(nextPlayer), players.get(nextNextPlayer));
         }
 
         //display winner 
-        for (int i = 0; i < players.size(); i++) {
-            if (players.get(i).isWinner()) {
+        for (PlayerHand player : players) {
+            if (player.isWinner()) {
                 System.out.println("-----------------------------------------------------------------\n");
                 System.out.println(winnerDisplay);
                 System.out.println("-----------------------------------------------------------------\n");
-                System.out.println(players.get(i).getName() + " is the winner!!!");
+                System.out.println(player.getName() + " is the winner!!!");
                 System.out.println("----------------------------------------------\n");
             }
         }
@@ -139,28 +143,28 @@ public class Driver {
     public static void nextPlayer(PlayerHand p, PlayerHand pNext) {
 
         //check to see if the topcard is an effect card
-        if (!(dp.topCard().getValue() == "S" || dp.topCard().getValue() == "R"
-                || dp.topCard().getValue() == "+2" || dp.topCard().getValue() == "WC"
-                || dp.topCard().getValue() == "+4")) {
+        if (!(Objects.equals(dp.topCard().getValue(), "S") || Objects.equals(dp.topCard().getValue(), "R")
+                || Objects.equals(dp.topCard().getValue(), "+2") || Objects.equals(dp.topCard().getValue(), "WC")
+                || Objects.equals(dp.topCard().getValue(), "+4"))) {
 
             //math logic to keep the game going in order of the cards
-            nextPlayer = nextPlayer + 
-            1 * direction + totalNumberPlayers;
+            nextPlayer = nextPlayer +
+                    direction + totalNumberPlayers;
             nextPlayer %= totalNumberPlayers;
 
             //if statement to check if the topcard is a reverse
-        } else if (dp.topCard().getValue() == "R" && effectApplied == false) {
+        } else if (Objects.equals(dp.topCard().getValue(), "R") && !effectApplied) {
 
             //switch the direction
             direction *= -1;
 
             //math logic to keep the game going in order of the cards
-            nextPlayer = nextPlayer + 1 * direction + totalNumberPlayers;
+            nextPlayer = nextPlayer + direction + totalNumberPlayers;
             nextPlayer %= totalNumberPlayers;
             effectApplied = true;
 
             //if statment to check if the topcard is a skip
-        } else if (dp.topCard().getValue() == "S" && effectApplied == false) {
+        } else if (Objects.equals(dp.topCard().getValue(), "S") && !effectApplied) {
 
             //math logic to keep the game going in order of the cards
             nextPlayer = nextPlayer + 2 * direction + totalNumberPlayers;
@@ -168,7 +172,7 @@ public class Driver {
             effectApplied = true;
 
             //if statment to check if the topcard is a +2
-        } else if (dp.topCard().getValue() == "+2" && effectApplied == false) {
+        } else if (Objects.equals(dp.topCard().getValue(), "+2") && !effectApplied) {
 
             //if statment to check if deck count is smaller than 2
             //if so populates the deck with cards from discard pile
@@ -190,7 +194,7 @@ public class Driver {
             effectApplied = true;
 
             //if statment to check if the topcard is a +4
-        } else if (dp.topCard().getValue() == "+4" && effectApplied == false) {
+        } else if (Objects.equals(dp.topCard().getValue(), "+4") && !effectApplied) {
 
             //if statment to check if deck count is smaller than 2
             //if so populates the deck with cards from discard pile
@@ -217,25 +221,25 @@ public class Driver {
             nextPlayer %= totalNumberPlayers;
             effectApplied = true;
 
-            //if statment to check if topcard is a wildcard
-        } else if (dp.topCard().getValue() == "WC") {
+            //if statement to check if topcard is a wildcard
+        } else if (Objects.equals(dp.topCard().getValue(), "WC")) {
 
             System.out.println(p.getName() + " chooses "
                     + dp.topCard().chooseColor() + " as the color!");
 
             //math logic to keep the game going in order of the cards
-            nextPlayer = nextPlayer + 1 * direction + totalNumberPlayers;
+            nextPlayer = nextPlayer + direction + totalNumberPlayers;
             nextPlayer %= totalNumberPlayers;
             effectApplied = true;
 
             //if statment to check if card is an effect and if its effect has been applied
-        } else if ((dp.topCard().getValue() == "S" && effectApplied == true
-                || dp.topCard().getValue() == "R" && effectApplied == true
-                || dp.topCard().getValue() == "+2" && effectApplied == true
-                || dp.topCard().getValue() == "+4" && effectApplied == true)) {
+        } else if ((Objects.equals(dp.topCard().getValue(), "S") && effectApplied
+                || Objects.equals(dp.topCard().getValue(), "R") && effectApplied
+                || Objects.equals(dp.topCard().getValue(), "+2") && effectApplied
+                || Objects.equals(dp.topCard().getValue(), "+4") && effectApplied)) {
 
             //math logic to keep the game going in order of the cards
-            nextPlayer = nextPlayer + 1 * direction + totalNumberPlayers;
+            nextPlayer = nextPlayer + direction + totalNumberPlayers;
             nextPlayer %= totalNumberPlayers;
         }
     }
